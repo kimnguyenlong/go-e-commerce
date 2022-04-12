@@ -1,0 +1,37 @@
+package entities
+
+import (
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
+)
+
+type Customer struct {
+	ID       string `json:"id" bson:"_id,omitempty"`
+	Email    string `json:"email" bson:"email,omitempty"`
+	Password string `json:"password" bson:"password,omitempty"`
+	FullName string `json:"full_name" bson:"full_name,omitempty"`
+	Phone    string `json:"phone" bson:"phone,omitempty,omitempty"`
+	Address  string `json:"address" bson:"address,omitempty"`
+}
+
+func (this Customer) CreateJWT() (string, error) {
+	jwtLifeTime, err := strconv.Atoi(os.Getenv("JWT_LIFE_TIME"))
+	if err != nil {
+		return "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":    this.ID,
+		"email": this.Email,
+		"exp":   time.Now().Add(time.Hour * time.Duration(jwtLifeTime)).Unix(),
+	})
+	key := []byte(os.Getenv("SECRET_KEY"))
+	return token.SignedString(key)
+}
+
+func (this Customer) CheckPassword(candidatePassword string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(this.Password), []byte(candidatePassword)) == nil
+}
