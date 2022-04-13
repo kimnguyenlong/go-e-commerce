@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package customer;
+
+option go_package = "./;customer";
+
+service Customer {
+    rpc IsExistingCustomer(CustomerInfo) returns (Result){}
+}
+
+message CustomerInfo {
+    string id = 1;
+}
+
+message Result {
+    bool isExisting = 1;
+}

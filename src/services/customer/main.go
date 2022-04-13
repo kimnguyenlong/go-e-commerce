@@ -8,6 +8,8 @@ import (
 	"log"
 	"os"
 
+	"ecommerce/customer/rpc/server"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -35,6 +37,11 @@ func main() {
 	err = routes.ConfigRouteCustomers(rootGroup)
 	if err != nil {
 		log.Fatalf("Cannot config route customers: %s", err)
+	}
+
+	err = server.Run()
+	if err != nil {
+		log.Fatalf("Cannot run grpc server: %s", err)
 	}
 
 	err = router.Run(os.Getenv("HTTP_PORT"))
