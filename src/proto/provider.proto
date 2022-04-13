@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package provider;
+
+option go_package = "./;provider";
+
+service Provider {
+    rpc IsExistingProvider(ProviderInfo) returns (Result) {}
+}
+
+message ProviderInfo {
+    string pID = 1;
+}
+
+message Result {
+    bool isExisting = 1;
+}
