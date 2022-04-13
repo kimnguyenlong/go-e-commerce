@@ -2,7 +2,6 @@ package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var customerSchema = bson.M{
@@ -45,11 +44,11 @@ type Customer struct {
 	*Base
 }
 
-func NewCustomer(dbCon *mongo.Database) (*Customer, error) {
+func NewCustomer() (*Customer, error) {
 	if customer != nil {
 		return customer, nil
 	}
-	base, err := NewBase(dbCon, "customers", customerSchema)
+	base, err := NewBase("customers", customerSchema)
 	if err != nil {
 		return nil, err
 	}

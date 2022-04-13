@@ -4,18 +4,17 @@ import (
 	"ecommerce/customer/controllers"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func ConfigRouteCustomers(rootGroup *gin.RouterGroup, dbCon *mongo.Database) error {
-	customerController, err := controllers.NewCustomerController(dbCon)
+func ConfigRouteCustomers(rootGroup *gin.RouterGroup) error {
+	customersController, err := controllers.NewCustomersController()
 	if err != nil {
 		return err
 	}
 	customersGroup := rootGroup.Group("/customers")
 	{
-		customersGroup.POST("/register", customerController.Register())
-		customersGroup.POST("/login", customerController.Login())
+		customersGroup.POST("/register", customersController.Register())
+		customersGroup.POST("/login", customersController.Login())
 	}
 	return nil
 }

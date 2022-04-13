@@ -12,15 +12,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var port = ":9000"
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Cannot load the .env file: %s\n", err)
 	}
 
-	dbCon, err := db.Connect(os.Getenv("MONGO_CONNECT_URI"))
+	dbCon, err := db.GetDBCon()
 	if err != nil {
 		log.Fatalf("Cannot connect to the Database: %s\n", err)
 	}
@@ -34,12 +32,12 @@ func main() {
 
 	rootGroup := router.Group("/api")
 
-	err = routes.ConfigRouteCustomers(rootGroup, dbCon)
+	err = routes.ConfigRouteCustomers(rootGroup)
 	if err != nil {
-		log.Fatalf("Cannot config route customer: %s", err)
+		log.Fatalf("Cannot config route customers: %s", err)
 	}
 
-	err = router.Run(port)
+	err = router.Run(os.Getenv("HTTP_PORT"))
 	if err != nil {
 		log.Fatalf("Cannot run server: %s", err)
 	}

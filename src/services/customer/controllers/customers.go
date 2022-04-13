@@ -15,21 +15,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type CustomerController struct {
+type CustomersController struct {
 	CustomerModel *models.Customer
 }
 
-func NewCustomerController(dbCon *mongo.Database) (*CustomerController, error) {
-	customerModel, err := models.NewCustomer(dbCon)
+func NewCustomersController() (*CustomersController, error) {
+	customerModel, err := models.NewCustomer()
 	if err != nil {
 		return nil, err
 	}
-	return &CustomerController{
+	return &CustomersController{
 		CustomerModel: customerModel,
 	}, nil
 }
 
-func (this CustomerController) Register() gin.HandlerFunc {
+func (this CustomersController) Register() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var customer entities.Customer
 		err := ctx.BindJSON(&customer)
@@ -55,7 +55,7 @@ func (this CustomerController) Register() gin.HandlerFunc {
 	}
 }
 
-func (this CustomerController) Login() gin.HandlerFunc {
+func (this CustomersController) Login() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var credentials struct {
 			Email    string `json:"email" bson:"email"`

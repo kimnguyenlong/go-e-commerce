@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"ecommerce/customer/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,7 +13,13 @@ type Base struct {
 	Collection *mongo.Collection
 }
 
-func NewBase(db *mongo.Database, name string, schema interface{}) (*Base, error) {
+func NewBase(name string, schema interface{}) (*Base, error) {
+	db, err := db.GetDBCon()
+
+	if err != nil {
+		return nil, err
+	}
+
 	validator := bson.M{
 		"$jsonSchema": schema,
 	}
@@ -22,7 +29,7 @@ func NewBase(db *mongo.Database, name string, schema interface{}) (*Base, error)
 		{Key: "collMod", Value: name},
 		{Key: "validator", Value: validator},
 	}
-	err := db.RunCommand(context.Background(), updateValidatorCmd).Err()
+	err = db.RunCommand(context.Background(), updateValidatorCmd).Err()
 
 	if err == nil {
 		return &Base{
