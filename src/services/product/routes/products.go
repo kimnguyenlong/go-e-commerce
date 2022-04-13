@@ -9,6 +9,7 @@ import (
 
 func ConfigRouteProducts(rootGroup *gin.RouterGroup) error {
 	productsController, err := controllers.NewProductsController()
+	reviewsController, err := controllers.NewReviewsController()
 	if err != nil {
 		return err
 	}
@@ -24,6 +25,18 @@ func ConfigRouteProducts(rootGroup *gin.RouterGroup) error {
 		singleProductGroup.GET("/", productsController.GetSingleProduct())
 		singleProductGroup.DELETE("/", middlewares.Authenticate, middlewares.ConfirmProvider, productsController.DeleteProduct())
 		singleProductGroup.PATCH("/", middlewares.Authenticate, middlewares.ConfirmProvider, productsController.UpdateProduct())
+	}
+
+	reviewsGroup := singleProductGroup.Group("/reviews")
+	{
+		reviewsGroup.POST("/", middlewares.Authenticate, middlewares.ConfirmCustomer, reviewsController.CreateReview())
+		reviewsGroup.GET("/", reviewsController.GetReviews())
+	}
+
+	singleReviewGroup := reviewsGroup.Group("/:rid")
+	{
+		singleReviewGroup.DELETE("/", middlewares.Authenticate, middlewares.ConfirmCustomer, reviewsController.DeleteReview())
+		singleReviewGroup.PATCH("/", middlewares.Authenticate, middlewares.ConfirmCustomer, reviewsController.UpdateReview())
 	}
 	return nil
 }
