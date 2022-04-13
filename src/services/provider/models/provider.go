@@ -2,7 +2,6 @@ package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var providerSchema = bson.M{
@@ -68,11 +67,11 @@ type Provider struct {
 	*Base
 }
 
-func NewProvider(dbCon *mongo.Database) (*Provider, error) {
+func NewProvider() (*Provider, error) {
 	if provider != nil {
 		return provider, nil
 	}
-	base, err := NewBase(dbCon, "providers", providerSchema)
+	base, err := NewBase("providers", providerSchema)
 	if err != nil {
 		return nil, err
 	}
