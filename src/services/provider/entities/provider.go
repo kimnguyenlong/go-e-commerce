@@ -31,7 +31,7 @@ func (this Provider) CreateJWT() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":    this.ID,
 		"email": this.Email,
-		"exp":   time.Now().Add(time.Hour * time.Duration(jwtLifeTime)).Unix(),
+		"exp":   time.Now().Add(time.Hour * 24 * time.Duration(jwtLifeTime)).Unix(),
 	})
 	key := []byte(os.Getenv("SECRET_KEY"))
 	return token.SignedString(key)
