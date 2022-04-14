@@ -4,6 +4,7 @@ import (
 	"context"
 	"ecommerce/cart/db"
 	"ecommerce/cart/middlewares"
+	"ecommerce/cart/rpc/server"
 	"log"
 	"os"
 
@@ -36,6 +37,11 @@ func main() {
 	err = routes.ConfigRouteCarts(rootGroup)
 	if err != nil {
 		log.Fatalf("Cannot config route carts: %s", err)
+	}
+
+	err = server.Run()
+	if err != nil {
+		log.Fatalf("Cannot run the gRPC server: %s", err)
 	}
 
 	err = router.Run(os.Getenv("HTTP_PORT"))
