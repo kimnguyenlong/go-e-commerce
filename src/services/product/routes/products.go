@@ -3,6 +3,7 @@ package routes
 import (
 	"ecommerce/product/controllers"
 	"ecommerce/product/middlewares"
+	"ecommerce/product/middlewares/caching"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,13 +17,13 @@ func ConfigRouteProducts(rootGroup *gin.RouterGroup) error {
 	productsGroup := rootGroup.Group("/products")
 	{
 		productsGroup.POST("/", middlewares.Authenticate, middlewares.ConfirmProvider, productsController.CreateProduct())
-		productsGroup.GET("/", productsController.GetProducts())
+		productsGroup.GET("/", caching.GetCachedProducts, productsController.GetProducts(), caching.CacheProducts)
 
 	}
 
 	singleProductGroup := productsGroup.Group("/:pid")
 	{
-		singleProductGroup.GET("/", productsController.GetSingleProduct())
+		singleProductGroup.GET("/", caching.GetSingleCachedProduct, productsController.GetSingleProduct())
 		singleProductGroup.DELETE("/", middlewares.Authenticate, middlewares.ConfirmProvider, productsController.DeleteProduct())
 		singleProductGroup.PATCH("/", middlewares.Authenticate, middlewares.ConfirmProvider, productsController.UpdateProduct())
 	}
@@ -30,7 +31,7 @@ func ConfigRouteProducts(rootGroup *gin.RouterGroup) error {
 	reviewsGroup := singleProductGroup.Group("/reviews")
 	{
 		reviewsGroup.POST("/", middlewares.Authenticate, middlewares.ConfirmCustomer, reviewsController.CreateReview())
-		reviewsGroup.GET("/", reviewsController.GetReviews())
+		reviewsGroup.GET("/", caching.GetCachedReviews, reviewsController.GetReviews(), caching.CacheReviews)
 	}
 
 	singleReviewGroup := reviewsGroup.Group("/:rid")

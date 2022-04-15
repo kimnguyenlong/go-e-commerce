@@ -83,6 +83,11 @@ func (c ReviewsController) GetReviews() gin.HandlerFunc {
 			"error": false,
 			"data":  reviews,
 		})
+
+		// go to cache the reviews
+		ctx.Set("productId", pid.Hex())
+		ctx.Set("reviews", reviews)
+		ctx.Next()
 	}
 }
 

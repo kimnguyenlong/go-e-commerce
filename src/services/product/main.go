@@ -24,6 +24,12 @@ func main() {
 	}
 	defer dbCon.Client().Disconnect(context.Background())
 
+	rdb, err := db.GetRedisClient()
+	if err != nil {
+		log.Fatalf("Cannot connect to the Redis: %s\n", err)
+	}
+	defer rdb.Close()
+
 	router := gin.Default()
 
 	router.Use(middlewares.CrossOriginResource())

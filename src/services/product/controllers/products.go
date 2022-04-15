@@ -66,6 +66,10 @@ func (pC ProductsController) GetProducts() gin.HandlerFunc {
 			"error": false,
 			"data":  products,
 		})
+
+		// go to cache the products
+		ctx.Set("products", products)
+		ctx.Next()
 	}
 }
 
