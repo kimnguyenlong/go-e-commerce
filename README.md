@@ -19,3 +19,4 @@ Run cmd `docker-compose build` and then `docker-compose up`, then the services w
 - Product: localhost:9002
 - Cart: localhost:9003
 - Order: localhost:9004
+You can use the Postman exported file `ecommerce.postman_collection.json` to leverage my example api calls.
