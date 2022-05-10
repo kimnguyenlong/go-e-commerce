@@ -4,8 +4,6 @@ services:
   go-ecommerce-customer:
     build: ./src/services/customer
     container_name: go-ecommerce-customer
-    ports:
-      - 9000:9000
     environment:
       MONGO_CONNECT_URI : mongodb://root:root@mongodb-ecommerce:27017/?authSource=admin&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&directConnection=true&ssl=false
       SECRET_KEY : secret
@@ -18,8 +16,6 @@ services:
   go-ecommerce-provider:
     build: ./src/services/provider
     container_name: go-ecommerce-provider
-    ports:
-      - 9001:9001
     environment:
       HTTP_PORT : :9001
       GRPC_PORT : :9101 
@@ -32,8 +28,6 @@ services:
   go-ecommerce-product:
     build: ./src/services/product
     container_name: go-ecommerce-product
-    ports:
-      - 9002:9002
     environment:
       HTTP_PORT : :9002
       MONGO_CONNECT_URI : mongodb://root:root@mongodb-ecommerce:27017/?authSource=admin&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&directConnection=true&ssl=false
@@ -51,8 +45,6 @@ services:
   go-ecommerce-cart:
     build: ./src/services/cart
     container_name: go-ecommerce-cart
-    ports:
-      - 9003:9003
     environment:
       HTTP_PORT : :9003
       GRPC_PORT : :9103
@@ -67,8 +59,6 @@ services:
   go-ecommerce-order:
     build: ./src/services/order
     container_name: go-ecommerce-order
-    ports:
-      - 9004:9004
     environment:
       HTTP_PORT : :9004
       MONGO_CONNECT_URI : mongodb://root:root@mongodb-ecommerce:27017/?authSource=admin&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&directConnection=true&ssl=false
@@ -80,6 +70,17 @@ services:
       - mongodb-ecommerce
       - go-ecommerce-customer
       - go-ecommerce-cart
+
+  nginx-ecommerce:
+    build: ./nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - go-ecommerce-customer
+      - go-ecommerce-provider
+      - go-ecommerce-product
+      - go-ecommerce-cart
+      - go-ecommerce-order
 
   mongodb-ecommerce:
     image: mongo
