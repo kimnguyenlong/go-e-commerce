@@ -74,7 +74,8 @@ services:
   nginx-ecommerce:
     build: ./nginx
     ports:
-      - 8080:80
+      - 80:80
+      - 443:443
     depends_on:
       - go-ecommerce-customer
       - go-ecommerce-provider
